@@ -17,14 +17,19 @@ pid_t  Moto_Chassis_Pid_Pos[4];  //底盘电机位置环PID结构体
 pid_t  Moto_Chassis_Pid_Spd[4];  //底盘电机速度环PID结构体
 chassis_t  Chassis;  /*用于底盘*/
 
-//J_Scope波形显示
+/**********************************J_Scope波形显示*********************************************/
 float J_Scope_rcinput_y;
 float J_Scope_rcinput_x;
+float Jscope_set_speed;
+float Jscope_get_speed;
+float Jscope_pid_out;
+
+/***************************************END****************************************************/
 
 
 void ChassisTask(void)
 {
-    
+//    ChassisSpeedTest();  //测试用
     ChassisDataUpdate(); 
     ChassisPidCalc(); 
     ChassisDataCanSend();
@@ -104,6 +109,42 @@ void ChassisDataCanSend(void)
 //    
     
 }
+
+
+/************************************************测试用*************************************************************/
+int32_t set_speed_test;
+
+void ChassisSpeedTest(void)
+{
+    if(RC_UPPER_RIGHT_SW_MID)
+    {
+        set_speed_test =0;
+        
+    }
+    else if(RC_UPPER_RIGHT_SW_UP)
+    {
+        set_speed_test = 400;
+        
+    }
+    else if(RC_UPPER_RIGHT_SW_DOWN)
+    {
+        set_speed_test = -150;
+        
+    }
+    Jscope_set_speed = set_speed_test;
+    Jscope_get_speed = Chassis_Motor[FRON_RIGH_201].speed_rpm/19.2;
+    
+     pid_calc(&Moto_Chassis_Pid_Spd[FRON_RIGH_201], Chassis_Motor[FRON_RIGH_201].speed_rpm, set_speed_test*REDUCTION_RATIO_3508);
+    
+    Jscope_pid_out = Moto_Chassis_Pid_Spd[FRON_RIGH_201].pos_out;
+}
+
+
+
+
+
+
+/*************************************************END***************************************************************/
 
 
 

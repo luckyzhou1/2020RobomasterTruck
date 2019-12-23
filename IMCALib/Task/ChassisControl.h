@@ -62,6 +62,13 @@ void ChassisPidCalc(void);
 void ParamInit(void);
 void ChassisDataCanSend(void);
 
+/****************************************≤‚ ‘”√****************************************/
+void ChassisSpeedTest(void);
+
+
+
+/*****************************************END******************************************/
+
 
 
 #endif

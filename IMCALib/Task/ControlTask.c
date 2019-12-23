@@ -20,7 +20,7 @@ void ParamInit(void)
     /*底盘四个电机速度环初始化PID参数*/
     for(int i=0; i<4; i++)
     {
-        PID_struct_init(&Moto_Chassis_Pid_Spd[i], POSITION_PID, 5000, 20000, 10.0f, 0.005f, 0.0f);
+        PID_struct_init(&Moto_Chassis_Pid_Spd[i], POSITION_PID, 5000, 20000, 10.0f, 0.002f, 0.0f);
     }
     
 }
