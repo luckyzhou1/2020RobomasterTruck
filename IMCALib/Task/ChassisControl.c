@@ -84,11 +84,15 @@ void ChassisDataUpdate(void)
 
 void ChassisPidCalc(void)
 {
+    Jscope_set_speed = Chassis.fr_motor_rpm_201;
+    Jscope_get_speed = Chassis_Motor[FRON_RIGH_201].speed_rpm/19.2;
     
     pid_calc(&Moto_Chassis_Pid_Spd[FRON_RIGH_201], Chassis_Motor[FRON_RIGH_201].speed_rpm, Chassis.fr_motor_rpm_201*REDUCTION_RATIO_3508);
     pid_calc(&Moto_Chassis_Pid_Spd[FRON_LEFT_202], Chassis_Motor[FRON_LEFT_202].speed_rpm, Chassis.fl_motor_rpm_202*REDUCTION_RATIO_3508);
     pid_calc(&Moto_Chassis_Pid_Spd[REAR_LEFT_203], Chassis_Motor[REAR_LEFT_203].speed_rpm, Chassis.rl_motor_rpm_203*REDUCTION_RATIO_3508);
     pid_calc(&Moto_Chassis_Pid_Spd[REAR_RIGH_204], Chassis_Motor[REAR_RIGH_204].speed_rpm, Chassis.rr_motor_rpm_204*REDUCTION_RATIO_3508);
+    
+    Jscope_pid_out = Moto_Chassis_Pid_Spd[FRON_RIGH_201].pos_out;
     
 }
 
@@ -96,17 +100,8 @@ void ChassisPidCalc(void)
 void ChassisDataCanSend(void)
 {
    
-//    if((Chassis.fr_motor_rpm_201 != 0)&&(Chassis.fl_motor_rpm_202 != 0)&&(Chassis.rl_motor_rpm_203 != 0)&&(Chassis.rr_motor_rpm_204 != 0))
-//    {
         SetChassisMotorCurrent(&hcan1, Moto_Chassis_Pid_Spd[FRON_RIGH_201].pos_out, Moto_Chassis_Pid_Spd[FRON_LEFT_202].pos_out, \
                      Moto_Chassis_Pid_Spd[REAR_LEFT_203].pos_out, Moto_Chassis_Pid_Spd[REAR_RIGH_204].pos_out);
-        
-//    }
-//    else
-//    {
-//        SetChassisMotorCurrent(&hcan1, 0, 0, 0, 0);
-//    }
-//    
     
 }
 
@@ -131,12 +126,12 @@ void ChassisSpeedTest(void)
         set_speed_test = -150;
         
     }
-    Jscope_set_speed = set_speed_test;
-    Jscope_get_speed = Chassis_Motor[FRON_RIGH_201].speed_rpm/19.2;
+//    Jscope_set_speed = set_speed_test;
+//    Jscope_get_speed = Chassis_Motor[FRON_RIGH_201].speed_rpm/19.2;
     
      pid_calc(&Moto_Chassis_Pid_Spd[FRON_RIGH_201], Chassis_Motor[FRON_RIGH_201].speed_rpm, set_speed_test*REDUCTION_RATIO_3508);
     
-    Jscope_pid_out = Moto_Chassis_Pid_Spd[FRON_RIGH_201].pos_out;
+//    Jscope_pid_out = Moto_Chassis_Pid_Spd[FRON_RIGH_201].pos_out;
 }
 
 
