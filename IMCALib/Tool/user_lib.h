@@ -18,7 +18,7 @@
             
             
 
-extern int32_t catch_angle;
+//extern int32_t catch_angle;
 
 
 enum{
@@ -29,15 +29,17 @@ enum{
 };
 
 
-typedef struct{
-    
-    int32_t compare_value_up;
-    int32_t compare_value_dowm;
-    int sin_ramp_switch;
-    
-}SinRampState;
+//typedef struct{
+//    
+//    int32_t compare_value_up;
+//    int32_t compare_value_dowm;
+//    int sin_ramp_switch;
+//    
+//}SinRampState;
 
-extern SinRampState  sin_ramp_state;
+//extern SinRampState  sin_ramp_state;
+
+
     
 /*int16_t类型限幅函数*/
 extern int16_t Int16Constrain(int16_t Value, int16_t minValue, int16_t maxValue);

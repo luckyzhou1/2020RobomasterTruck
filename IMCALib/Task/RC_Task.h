@@ -6,6 +6,23 @@
 #define RC_CONTROL_ENABLE   /*遥控器接收使能宏定义*/
 #define RC_Frame_Lentgh		18
 
+#define KEY_W 				((uint16_t)1 << 0)&remote_control.keyBoard.key_code
+#define KEY_S 				((uint16_t)1 << 1)&remote_control.keyBoard.key_code 
+#define KEY_A 				((uint16_t)1 << 2)&remote_control.keyBoard.key_code
+#define KEY_D 				((uint16_t)1 << 3)&remote_control.keyBoard.key_code
+#define KEY_SHIFT 		((uint16_t)1 << 4)&remote_control.keyBoard.key_code
+#define KEY_CTRL 			((uint16_t)1 << 5)&remote_control.keyBoard.key_code
+#define KEY_Q 				((uint16_t)1 << 6)&remote_control.keyBoard.key_code
+#define KEY_E 				((uint16_t)1 << 7)&remote_control.keyBoard.key_code
+#define KEY_R 				((uint16_t)1 << 8)&remote_control.keyBoard.key_code
+#define KEY_F 				((uint16_t)1 << 9)&remote_control.keyBoard.key_code
+#define KEY_G 				((uint16_t)1 << 10)&remote_control.keyBoard.key_code
+#define KEY_Z 				((uint16_t)1 << 11)&remote_control.keyBoard.key_code
+#define KEY_X 				((uint16_t)1 << 12)&remote_control.keyBoard.key_code
+#define KEY_C 				((uint16_t)1 << 13)&remote_control.keyBoard.key_code
+#define KEY_V 				((uint16_t)1 << 14)&remote_control.keyBoard.key_code
+#define KEY_B 				((uint16_t)1 << 15)&remote_control.keyBoard.key_code
+
 
 /*遥控器左上方和右上方的两个开关状态*/
 #define  RC_UPPER_LEFT_SW_UP     (remote_control.switch_left == Switch_Up)

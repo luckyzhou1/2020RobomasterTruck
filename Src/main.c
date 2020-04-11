@@ -36,7 +36,9 @@
 #include "Ano_Dt.h"
 #include "stdio.h"
 #include "ControlTask.h"
+#include "Paraminit.h"
 #include "ramp.h"
+#include "CatchingTask.h"
 
 /* USER CODE END Includes */
 
@@ -107,9 +109,11 @@ int main(void)
   MX_TIM7_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
+  MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT_IDLE(&huart2,UART_Buffer,100);   /*启动串口空闲中断，用于接收遥控器发来的数据*/
   HAL_TIM_Base_Start_IT(&htim3);  //使能TIM3中断，溢出时间为1ms
+	  HAL_TIM_Base_Start_IT(&htim5); //使能TIM5中断，溢出时间为500ms
   CANFilterInit();     /*CAN1滤波器的配置和开启CAN通信*/
   APPInteractionInit(); /*初始化调试组件*/
   ParamInit();
@@ -123,8 +127,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+		
 
-      AllTask();
+
+	AllTask();
+//HAL_GPIO_WritePin(GPIOF,GPIO_PIN_9,GPIO_PIN_RESET);
+
       
   }
   /* USER CODE END 3 */
@@ -175,11 +183,12 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-    static uint16_t ms1 = 0,ms2 = 0;
+    static uint16_t ms1 = 0,ms2 = 0,ms3 = 0;
     if(htim->Instance == TIM3)
     {
         ms1++;
         ms2++;
+				ms3++;
         if(ms1 >= 1)
         {
             ms1 = 0;
@@ -190,9 +199,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
             ms2 = 0;
             Data_Send_ANO_DT = 1;
         }
+				if(ms3 >= 100)
+        {
+            ms3 = 0;
+            Delay_100ms  = 1;
+        }
         
     }
-    
+		if(htim->Instance == TIM5)
+		{
+			
+				
+				Flip_Box_Delay++;
+				rotational_delay++;
+		//	Rotational_Delay1++;
+		}
 }
 /* USER CODE END 4 */
 

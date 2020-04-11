@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -32,7 +32,13 @@
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN Private defines */
-
+	 #define GPIOB2 HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_2)
+	 	 #define GPIOB0 HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_0)
+	 	 #define GPIOF5 HAL_GPIO_TogglePin(GPIOF,GPIO_PIN_5)
+	 	 #define GPIOB9_RESET 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_9,GPIO_PIN_RESET)
+	 	 #define GPIOD12_RESET 	HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_RESET)
+	  #define GPIOB9_SET 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_9,GPIO_PIN_SET)
+	  #define GPIOD12_SET 	HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_SET)
 /* USER CODE END Private defines */
 
 void MX_GPIO_Init(void);

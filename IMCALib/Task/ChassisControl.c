@@ -13,8 +13,8 @@
 
 
 uint8_t Chassis_Ctrl; //底盘控制标志位
-pid_t  Moto_Chassis_Pid_Pos[4];  //底盘电机位置环PID结构体
-pid_t  Moto_Chassis_Pid_Spd[4];  //底盘电机速度环PID结构体
+pid_t  Moto_Chassis_Pid_Pos[8];  //CAN1位置环PID结构体
+pid_t  Moto_Chassis_Pid_Spd[8];  //CAN1速度环PID结构体
 chassis_t  Chassis;  /*用于底盘*/
 
 /**********************************J_Scope波形显示*********************************************/
@@ -100,7 +100,7 @@ void ChassisPidCalc(void)
 void ChassisDataCanSend(void)
 {
    
-        SetChassisMotorCurrent(&hcan1, Moto_Chassis_Pid_Spd[FRON_RIGH_201].pos_out, Moto_Chassis_Pid_Spd[FRON_LEFT_202].pos_out, \
+        SetChassisMotorCurrent(&hcan1, Moto_Chassis_Pid_Spd[FRON_RIGH_201].pos_out, Moto_Chassis_Pid_Spd[FRON_LEFT_202].pos_out, 
                      Moto_Chassis_Pid_Spd[REAR_LEFT_203].pos_out, Moto_Chassis_Pid_Spd[REAR_RIGH_204].pos_out);
     
 }

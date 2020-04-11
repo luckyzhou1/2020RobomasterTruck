@@ -7,7 +7,7 @@
 #include "CanBus_Task.h"
 
 
-moto_measure_t  Chassis_Motor[4];  //底盘电机参数结构体
+moto_measure_t  Chassis_Motor[7];  //底盘电机参数结构体
 moto_measure_t  Gimbal_Motor[2];  //云台电机参数结构体
 uint16_t can_cnt;
 
@@ -67,6 +67,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *_hcan)
 		case CAN_3508Moto2_ID:
 		case CAN_3508Moto3_ID:
 		case CAN_3508Moto4_ID:
+        case CAN_3508Moto5_ID:
+        case CAN_3508Moto6_ID:
+        case CAN_3508Moto7_ID:
         {
             static u8 i;
             i = rx_header.StdId - CAN_3508Moto1_ID;
@@ -75,12 +78,12 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *_hcan)
             
 
         }break;
-	    case CAN_YAW_Motor_ID: /*对应的6020电机的ID为1*/
-        {
-            
-            Gimbal_Motor[0].msg_cnt++ <= 50 ? GetMotorOffset(&Gimbal_Motor[0], rx_data) : GetMotorMeasure(&Gimbal_Motor[0], rx_data);  /*读取yaw轴电机参数信息*/
-            
-        }break;      
+//	    case CAN_3508Moto5_ID: /*对应的6020电机的ID为1*/
+//        {
+//            
+//            Gimbal_Motor[0].msg_cnt++ <= 50 ? GetMotorOffset(&Gimbal_Motor[0], rx_data) : GetMotorMeasure(&Gimbal_Motor[0], rx_data);  /*读取yaw轴电机参数信息*/
+//            
+//        }break;      
         
 	}
 	if(can_cnt == 500)  /*用于指示CAN通信是否正常*/
@@ -170,7 +173,7 @@ void SetChassisMotorCurrent(CAN_HandleTypeDef *hcan,s16 iq1, s16 iq2, s16 iq3, s
  * @others 标识符0x200对应前四个ID的电调，标识符0x1FF对应后四个ID的电调，一路CAN最多可以接八个电机，
  *         此函数是对应后4个ID的电调
 **********************************************************************************************************************/
-void SetGimbalMotorValue(CAN_HandleTypeDef *hcan,s16 iq1, s16 iq2, s16 iq3, s16 iq4)
+void SetMotorValue(CAN_HandleTypeDef *hcan,s16 iq1, s16 iq2, s16 iq3, s16 iq4)
 {
     
     CAN_TxHeaderTypeDef   tx_header;

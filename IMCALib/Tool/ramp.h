@@ -27,6 +27,17 @@ typedef __packed struct
 } first_order_filter_type_t;
 
 
+typedef struct{
+    
+    int32_t compare_value_up;
+    int32_t compare_value_dowm;
+    int sin_ramp_switch;
+    
+}SinRampState;
+
+extern SinRampState Sin_Test;
+
+
 extern first_order_filter_type_t chassis_cmd_slow_set_vx;
 extern first_order_filter_type_t chassis_cmd_slow_set_vy;
 
@@ -37,5 +48,12 @@ void FirstOrderFilterInit(first_order_filter_type_t *first_order_filter_type, fl
 void FirstOrderFilterCali(first_order_filter_type_t *first_order_filter_type, float input);
 
 void ChassisRampInit(void);
+
+
+int32_t SinRampCalc(SinRampState *sin_state, int32_t variation, uint8_t Sin_control_time_up, uint8_t Sin_control_time_down);
+
+void SinRampInit(SinRampState *sin_state);
+
+//void SinTest(void);
 
 #endif

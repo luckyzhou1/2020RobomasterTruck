@@ -10,7 +10,7 @@
       <TargetName>ChassisTest</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -561,6 +561,11 @@
               <FileType>1</FileType>
               <FilePath>..\IMCALib\Task\ControlTask.c</FilePath>
             </File>
+            <File>
+              <FileName>CatchingTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\IMCALib\Task\CatchingTask.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -595,6 +600,11 @@
               <FileName>SW_Wave.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\IMCALib\Tool\SW_Wave.c</FilePath>
+            </File>
+            <File>
+              <FileName>Paraminit.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\IMCALib\Tool\Paraminit.c</FilePath>
             </File>
           </Files>
         </Group>

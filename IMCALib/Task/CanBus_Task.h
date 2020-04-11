@@ -18,8 +18,9 @@ typedef enum
 	CAN_3508Moto2_ID = 0x202,
 	CAN_3508Moto3_ID = 0x203,
 	CAN_3508Moto4_ID = 0x204,
-    CAN_YAW_Motor_ID = 0x205,
-    CAN_PITCH_Motor_ID = 0x206,
+    CAN_3508Moto5_ID = 0x205,
+    CAN_3508Moto6_ID = 0x206,
+    CAN_3508Moto7_ID = 0x207,
 	
 }CAN_Message_ID;
 
@@ -55,7 +56,7 @@ void GetMotorMeasure(moto_measure_t *ptr, uint8_t can_rx_data[]);
 /*发送电机的信息到CAN总线上，此函数用于一路CAN的前4个电机的控制*/
 void SetChassisMotorCurrent(CAN_HandleTypeDef *hcan,s16 iq1, s16 iq2, s16 iq3, s16 iq4);
 /*发送电机的信息到CAN总线上，此函数用于一路CAN的后4个电机的控制*/
-void SetGimbalMotorValue(CAN_HandleTypeDef *hcan,s16 iq1, s16 iq2, s16 iq3, s16 iq4);
+void SetMotorValue(CAN_HandleTypeDef *hcan,s16 iq1, s16 iq2, s16 iq3, s16 iq4);
 
 
 

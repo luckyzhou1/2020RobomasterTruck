@@ -3,8 +3,9 @@
 
 #include "mytype.h"
 
+extern int catch_count;
 
-void ParamInit(void);
+
 void AllTask(void);
 
 /*速度环PID参数重置*/

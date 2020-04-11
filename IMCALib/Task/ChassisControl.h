@@ -9,7 +9,7 @@
 #define GUARD_CHASSIS_MAXSPEED_RPM    400    //哨兵底盘电机最大转速，单位：rpm
 #define CHASSIS_MAXSPEED_RPM          400    //步兵底盘电机最大转速，单位：rpm
 #define CHASSIS_VX_MAXSPEED_RPM       350    //底盘左右平移时，底盘电机的最大速度，单位：rpm
-#define REDUCTION_RATIO_3508          19.2   //3508电机减速比
+#define REDUCTION_RATIO_3508          19.2f   //3508电机减速比
 
 
 /*底盘电机序号*/
@@ -51,8 +51,8 @@ typedef struct{
 
 
 extern uint8_t Chassis_Ctrl;
-extern pid_t  Moto_Chassis_Pid_Pos[4];  //位置环PID结构体
-extern pid_t  Moto_Chassis_Pid_Spd[4];  //速度环PID结构体
+extern pid_t  Moto_Chassis_Pid_Pos[8];  //位置环PID结构体
+extern pid_t  Moto_Chassis_Pid_Spd[8];  //速度环PID结构体
 extern chassis_t  Chassis;
 
 
