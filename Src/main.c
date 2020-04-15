@@ -202,7 +202,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				if(ms3 >= 100)
         {
             ms3 = 0;
-            Delay_100ms  = 1;
+            delay_100ms  = 1;
         }
         
     }
@@ -210,9 +210,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			
 				
-				Flip_Box_Delay++;
+				flip_box_delay++;
 				rotational_delay++;
-		//	Rotational_Delay1++;
 		}
 }
 /* USER CODE END 4 */

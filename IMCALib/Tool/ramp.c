@@ -92,11 +92,11 @@ int32_t SinRampCalc(SinRampState *sin_state, int32_t variation, uint8_t Sin_cont
                Sin_up_count = 0;
                Sin_up_x = 0;//归零          
                sin_state->compare_value_up = variation;
-              
-							SinSign=1;
-							rotational_delay = 0;
-							catch_count++;
-						 Delay_100ms = 0; 
+               
+               sinsign=1;
+               rotational_delay = 0;
+               catch_count++;
+               delay_100ms = 0; 
               
                last_out += variation;//每次的变化量累加
             }
@@ -129,11 +129,12 @@ int32_t SinRampCalc(SinRampState *sin_state, int32_t variation, uint8_t Sin_cont
                 Sin_down_x = 0;
                 
                 sin_state->compare_value_dowm = variation;
-							SinSign=1;
-							catch_count++;
-					rotational_delay = 0;
-						 Delay_100ms = 0; 
-              last_out += variation;
+						  	sinsign=1;
+							  rotational_delay = 0;
+							  catch_count++;
+                delay_100ms = 0; 
+              
+                last_out += variation;
             }
             
         }

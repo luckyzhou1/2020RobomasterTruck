@@ -7,22 +7,19 @@
 #include "gpio.h"
 
 SinRampState Sin_Test;
-int32_t lift_angle;
-int32_t rotate_angle0;
+int32_t lift_angle;//抬升角度
+int32_t rotate_angle0;//3508翻转的角度
 int32_t rotate_angle1;
 int32_t set_speed; 
-int Delay_100ms; 
-int SinSign=1;
+int delay_100ms; //延时100ms
+int sinsign=1;//斜坡函数是否已经初始化的标志位
+int catching_sign=1;//判断是否进行夹取的标志卫
 
-int Flip_Box_Delay;
-int Flip_Box_Sign;
-int Even_Take_Sign=0;
+int flip_box_delay;//弹箱子延时
+int flip_box_sign;//弹箱子标志位
+int Even_Take_Sign=0;//用于判断是哪一步分解动作
 
 int rotational_delay;
-int Rotational_Delay1;
-int Rotational_Delay2;
-int Rotational_Delay3;
-
 int Rotational_Sign;
 /************************J-Scope波形显示定义*************************/
 float Jscope_set_angle;
@@ -36,10 +33,10 @@ void CatchingControlOne1(void)//夹取动作1的分解动作1
   
   if(KEY_C)
 	{
-		if(SinSign==1)
+		if(sinsign==1)
 			{
 				SinRampInit(&Sin_Test);
-				SinSign=0;
+				sinsign=0;
 			}
 		 Sin_Test.sin_ramp_switch = 1;
 		 lift_angle = -313000;
@@ -48,10 +45,10 @@ void CatchingControlOne1(void)//夹取动作1的分解动作1
  
   if(KEY_R)
 	{
-		if(SinSign==1)
+		if(sinsign==1)
 			{
 				SinRampInit(&Sin_Test);
-				SinSign=0;
+				sinsign=0;
 			}
 		 Sin_Test.sin_ramp_switch = 1;
 		 lift_angle = 313000;//上升2
@@ -64,12 +61,13 @@ void CatchingControlOne1(void)//夹取动作1的分解动作1
       Even_Take_Sign=1;//初始化
 	}
 		 
-	 if((catch_count==2)&&(Even_Take_Sign==1))
+	 if((catch_count==2)&&(Even_Take_Sign==1)&&(catching_sign==1))
 	 {
 			rotate_angle0 = 1111;//夹取时旋转的角度，还没调试
      rotate_angle1 = (-rotate_angle0);
 			catch_count++;
 			rotational_delay = 0;//给一个延时给3508旋转的时间
+     catching_sign = 0;
 	 }
 	 else if((catch_count==3)&&(rotational_delay>5)&&(rotational_delay<10))
 	 {
@@ -79,15 +77,15 @@ void CatchingControlOne1(void)//夹取动作1的分解动作1
 	 }
 	 else if((catch_count==4)&&(rotational_delay ==1))
 	 { 
-		 if(SinSign==1)
+		 if(sinsign==1)
 			{
 				SinRampInit(&Sin_Test);
-				SinSign=0;
+				sinsign=0;
 			}
 		 Sin_Test.sin_ramp_switch = 1;
 		 lift_angle = 156400;//上升1
 	 }
-	 else if((catch_count==5)&&(Delay_100ms==1 ))
+	 else if((catch_count==5)&&(delay_100ms==1 ))
 	 {
       rotate_angle0 = 0;//夹取时旋转的角度，还没调试
       rotate_angle1 = (-rotate_angle0);
@@ -102,10 +100,10 @@ void CatchingControlOne1(void)//夹取动作1的分解动作1
 	 }
 	 else if(catch_count==7)
 	{
-		  if(SinSign==1)
+		  if(sinsign==1)
 			{
 				SinRampInit(&Sin_Test);
-				SinSign=0;
+				sinsign=0;
 			}
       Sin_Test.sin_ramp_switch = 1;
       lift_angle = -156400;//下降1
@@ -157,14 +155,14 @@ void CatchingControlOne2(void)//夹取动作1的分解动作2
     else if((	rotational_delay >2)&&(rotational_delay<5)&&(catch_count==2))
     {
         HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,GPIO_PIN_SET);//弹箱子
-        Flip_Box_Delay=0;
-        Flip_Box_Sign=1;
+        flip_box_delay=0;
+        flip_box_sign=1;
     }
-    if((1< Flip_Box_Delay)&&(Flip_Box_Delay<4)&&(Flip_Box_Sign==1))
+    if((1< flip_box_delay)&&(flip_box_delay<4)&&(flip_box_sign==1))
     {
       HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,GPIO_PIN_RESET);//收回弹箱子
       
-        Flip_Box_Sign=0;
+        flip_box_sign=0;
         catch_count++;
     }
      else if((catch_count==3)&&(rotational_delay>5)&&(rotational_delay<10))
@@ -175,15 +173,15 @@ void CatchingControlOne2(void)//夹取动作1的分解动作2
      }
      else if((catch_count==4)&&(rotational_delay ==1))
      { 
-       if(SinSign==1)
+       if(sinsign==1)
         {
           SinRampInit(&Sin_Test);
-          SinSign=0;
+          sinsign=0;
         }
        Sin_Test.sin_ramp_switch = 1;
        lift_angle = 156400;//上升1
      }
-     else if((catch_count==5)&&(Delay_100ms==1 ))
+     else if((catch_count==5)&&(delay_100ms==1 ))
      {
         rotate_angle0 = 0;//夹取时旋转的角度，还没调试
         rotate_angle1 = (-rotate_angle0);
@@ -198,14 +196,15 @@ void CatchingControlOne2(void)//夹取动作1的分解动作2
      }
      else if(catch_count==7)
      { 
-        if(SinSign==1)
+        if(sinsign==1)
         {
           SinRampInit(&Sin_Test);
-          SinSign=0;
+          sinsign=0;
         }
         Sin_Test.sin_ramp_switch = 1;
         lift_angle = -156400;//下降1
-        Even_Take_Sign=3;      
+        Even_Take_Sign=3;
+        catching_sign = 0;        
      }
 
     
@@ -248,10 +247,10 @@ void CatchingReset(void)//复位动作，阀的复位还没写
   }  
   else if((rotational_delay>6)&&(rotational_delay<10)&&(catch_reset_sign==1))//先把旋转复位，才能下降
   {
-    if(SinSign==1)
+    if(sinsign==1)
     {
         SinRampInit(&Sin_Test);
-        SinSign=0;
+        sinsign=0;
     }
     Sin_Test.sin_ramp_switch = 1;
     lift_angle = 0;//下降到上电位置
