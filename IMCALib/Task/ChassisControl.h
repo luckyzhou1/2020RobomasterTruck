@@ -2,11 +2,9 @@
 #define __CHASSIS_CONTROL_H
 
 #include "pid.h"
-//用于测试哨兵时，去掉下面的注释
-//#define SKYGUARD_CHASSIS       //哨兵底盘控制
+
 
 //3508在带有麦轮负载且悬空的情况下的最大转速为430rpm左右，设置最大速度尽量不要超过这个数值
-#define GUARD_CHASSIS_MAXSPEED_RPM    400    //哨兵底盘电机最大转速，单位：rpm
 #define CHASSIS_MAXSPEED_RPM          400    //步兵底盘电机最大转速，单位：rpm
 #define CHASSIS_VX_MAXSPEED_RPM       350    //底盘左右平移时，底盘电机的最大速度，单位：rpm
 #define REDUCTION_RATIO_3508          19.2f   //3508电机减速比
@@ -61,14 +59,6 @@ void ChassisDataUpdate(void);
 void ChassisPidCalc(void);
 void ParamInit(void);
 void ChassisDataCanSend(void);
-
-/****************************************测试用****************************************/
-void ChassisSpeedTest(void);
-
-
-
-/*****************************************END******************************************/
-
 
 
 #endif

@@ -39,6 +39,8 @@
 #include "Paraminit.h"
 #include "ramp.h"
 #include "CatchingTask.h"
+#include "Judge_interact.h"
+#include "Vision_interact.h"
 
 /* USER CODE END Includes */
 
@@ -109,12 +111,17 @@ int main(void)
   MX_TIM7_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
+  MX_CAN2_Init();
   MX_TIM5_Init();
+  MX_USART3_UART_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT_IDLE(&huart2,UART_Buffer,100);   /*启动串口空闲中断，用于接收遥控器发来的数据*/
+  HAL_UART3_Receive_IT_IDLE(); //视觉通信串口DMA空闲中断开启
+  HAL_UART6_Receive_IT_IDLE(); //裁判系统通信串口DMA空闲中断开启
   HAL_TIM_Base_Start_IT(&htim3);  //使能TIM3中断，溢出时间为1ms
-	  HAL_TIM_Base_Start_IT(&htim5); //使能TIM5中断，溢出时间为500ms
-  CANFilterInit();     /*CAN1滤波器的配置和开启CAN通信*/
+  HAL_TIM_Base_Start_IT(&htim5); //使能TIM5中断，溢出时间为500ms
+  CANFilterInit();     /*CAN过滤器的配置和开启CAN通信*/
   APPInteractionInit(); /*初始化调试组件*/
   ParamInit();
 

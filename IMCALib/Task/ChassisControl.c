@@ -29,11 +29,9 @@ float Jscope_pid_out;
 
 void ChassisTask(void)
 {
-//    ChassisSpeedTest();  //测试用
     ChassisDataUpdate(); 
     ChassisPidCalc(); 
     ChassisDataCanSend();
-    
 }
 
 
@@ -47,37 +45,22 @@ void ChassisDataUpdate(void)
     chassis_vy_channel = RcDeadlineLimit(remote_control.ch2, 10)*CHASSIS_MAXSPEED_RPM/660;
     chassis_vw_channel = RcDeadlineLimit(remote_control.ch3, 10)*CHASSIS_MAXSPEED_RPM/660;
 
-    
-    #if defined (SKYGUARD_CHASSIS)
-    
-        Chassis.vx = remote_control.ch1*GUARD_CHASSIS_MAXSPEED_RPM/660; //左右平移
-    
-        Chassis.fr_motor_rpm_201 = -Chassis.vx;
-        Chassis.fl_motor_rpm_202 = -Chassis.vx;
-    
-    #else
-    
-/****************************************斜坡测试*********************************************************/
-        //一阶低通滤波代替斜坡作为底盘速度输入
-        FirstOrderFilterCali(&chassis_cmd_slow_set_vx, chassis_vx_channel);
-        FirstOrderFilterCali(&chassis_cmd_slow_set_vy, chassis_vy_channel);
+    /*一阶低通滤波代替斜坡作为底盘速度输入*/
+    FirstOrderFilterCali(&chassis_cmd_slow_set_vx, chassis_vx_channel);
+    FirstOrderFilterCali(&chassis_cmd_slow_set_vy, chassis_vy_channel);
 
-        Chassis.vx = chassis_cmd_slow_set_vx.out; //左右平移
-        Chassis.vy = chassis_cmd_slow_set_vy.out; //前后运动
-        Chassis.vw = chassis_vw_channel; //自转
-
-/*******************************************END***********************************************************/
-        
-        J_Scope_rcinput_x = Chassis.vx;
-        J_Scope_rcinput_y = Chassis.vy;
-        
-        Chassis.fr_motor_rpm_201 = +Chassis.vx - Chassis.vy + Chassis.vw;
-        Chassis.fl_motor_rpm_202 = +Chassis.vx + Chassis.vy + Chassis.vw;
-        Chassis.rl_motor_rpm_203 = -Chassis.vx + Chassis.vy + Chassis.vw;
-        Chassis.rr_motor_rpm_204 = -Chassis.vx - Chassis.vy + Chassis.vw;
-        
-    #endif
+    Chassis.vx = chassis_cmd_slow_set_vx.out; //左右平移
+    Chassis.vy = chassis_cmd_slow_set_vy.out; //前后运动
+    Chassis.vw = chassis_vw_channel; //自转
     
+    J_Scope_rcinput_x = Chassis.vx;
+    J_Scope_rcinput_y = Chassis.vy;
+    
+    Chassis.fr_motor_rpm_201 = +Chassis.vx - Chassis.vy + Chassis.vw;
+    Chassis.fl_motor_rpm_202 = +Chassis.vx + Chassis.vy + Chassis.vw;
+    Chassis.rl_motor_rpm_203 = -Chassis.vx + Chassis.vy + Chassis.vw;
+    Chassis.rr_motor_rpm_204 = -Chassis.vx - Chassis.vy + Chassis.vw;
+        
 }
 
 
@@ -104,42 +87,6 @@ void ChassisDataCanSend(void)
                      Moto_Chassis_Pid_Spd[REAR_LEFT_203].pos_out, Moto_Chassis_Pid_Spd[REAR_RIGH_204].pos_out);
     
 }
-
-
-/************************************************测试用*************************************************************/
-int32_t set_speed_test;
-
-void ChassisSpeedTest(void)
-{
-    if(RC_UPPER_RIGHT_SW_MID)
-    {
-        set_speed_test =0;
-        
-    }
-    else if(RC_UPPER_RIGHT_SW_UP)
-    {
-        set_speed_test = 400;
-        
-    }
-    else if(RC_UPPER_RIGHT_SW_DOWN)
-    {
-        set_speed_test = -150;
-        
-    }
-//    Jscope_set_speed = set_speed_test;
-//    Jscope_get_speed = Chassis_Motor[FRON_RIGH_201].speed_rpm/19.2;
-    
-     pid_calc(&Moto_Chassis_Pid_Spd[FRON_RIGH_201], Chassis_Motor[FRON_RIGH_201].speed_rpm, set_speed_test*REDUCTION_RATIO_3508);
-    
-//    Jscope_pid_out = Moto_Chassis_Pid_Spd[FRON_RIGH_201].pos_out;
-}
-
-
-
-
-
-
-/*************************************************END***************************************************************/
 
 
 

@@ -14,13 +14,19 @@
 typedef enum
 {
 
-	CAN_3508Moto1_ID = 0x201,
-	CAN_3508Moto2_ID = 0x202,
-	CAN_3508Moto3_ID = 0x203,
-	CAN_3508Moto4_ID = 0x204,
-    CAN_3508Moto5_ID = 0x205,
-    CAN_3508Moto6_ID = 0x206,
-    CAN_3508Moto7_ID = 0x207,
+	CAN1_3508Moto1_ID = 0x201,
+	CAN1_3508Moto2_ID = 0x202,
+	CAN1_3508Moto3_ID = 0x203,
+	CAN1_3508Moto4_ID = 0x204,
+    CAN1_3508Moto5_ID = 0x205,
+    CAN1_3508Moto6_ID = 0x206,
+    CAN1_3508Moto7_ID = 0x207,
+    
+    CAN2_2006Motor1_ID  = 0x201,
+	CAN2_3508Motor2_ID  = 0x202,
+	CAN2_3508Motor3_ID  = 0x203,
+    CAN2_YawMotor1_ID   = 0x205,
+    CAN2_PitchMotor2_ID = 0x206,
 	
 }CAN_Message_ID;
 
@@ -44,7 +50,6 @@ typedef struct{
 
 
 extern moto_measure_t  Chassis_Motor[];  //底盘电机参数结构体
-extern moto_measure_t  Gimbal_Motor[];  //云台电机参数结构体
 
 
 /*CAN1过滤器的配置和CAN的开启*/
@@ -58,6 +63,8 @@ void SetChassisMotorCurrent(CAN_HandleTypeDef *hcan,s16 iq1, s16 iq2, s16 iq3, s
 /*发送电机的信息到CAN总线上，此函数用于一路CAN的后4个电机的控制*/
 void SetMotorValue(CAN_HandleTypeDef *hcan,s16 iq1, s16 iq2, s16 iq3, s16 iq4);
 
+void SetGimbalMotorVoltage(CAN_HandleTypeDef *hcan, int16_t yaw, int16_t pitch);
+void SetShootMotorCurrent(CAN_HandleTypeDef *hcan, int16_t current1, int16_t current2, int16_t current3);
 
 
 #endif

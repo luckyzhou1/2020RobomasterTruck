@@ -5,17 +5,17 @@
 **********************************************************************************************************************/
 
 #include "CanBus_Task.h"
+#include "GimbalControl.h"
+#include "ShootControl.h"
 
 
 moto_measure_t  Chassis_Motor[7];  //底盘电机参数结构体
-moto_measure_t  Gimbal_Motor[2];  //云台电机参数结构体
-uint16_t can_cnt;
 
 
 
 /**********************************************************************************************************************
   * @Func	 CANFilterInit
-  * @Brief   CAN1滤波器配置
+  * @Brief   CAN过滤器配置
   * @Param	 CAN_HandleTypeDef* _hcan
   * @Retval	 None
  *********************************************************************************************************************/
@@ -39,6 +39,11 @@ void CANFilterInit(void)
 	HAL_CAN_ConfigFilter(&hcan1, &CAN_FilterConfigStructure);       // init can filter
     HAL_CAN_Start(&hcan1);                                         // start can1
     HAL_CAN_ActivateNotification(&hcan1,CAN_IT_RX_FIFO0_MSG_PENDING);  // enable can1 rx interrupt
+    
+    CAN_FilterConfigStructure.FilterBank = 14;
+	HAL_CAN_ConfigFilter(&hcan2, &CAN_FilterConfigStructure);
+	HAL_CAN_Start(&hcan2); 
+	HAL_CAN_ActivateNotification(&hcan2,CAN_IT_RX_FIFO0_MSG_PENDING);
 
 }
 
@@ -52,45 +57,68 @@ void CANFilterInit(void)
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *_hcan)
 {
     
+    static uint16_t can_cnt;
     CAN_RxHeaderTypeDef   rx_header;
     uint8_t               rx_data[8];
 
-	if(_hcan->Instance == CAN1)
-	{
-	    HAL_CAN_GetRxMessage(_hcan, CAN_RX_FIFO0, &rx_header, rx_data); /*recive can data*/
-        can_cnt++;
-	}
-	switch(rx_header.StdId)
-    {
-        
-		case CAN_3508Moto1_ID:
-		case CAN_3508Moto2_ID:
-		case CAN_3508Moto3_ID:
-		case CAN_3508Moto4_ID:
-        case CAN_3508Moto5_ID:
-        case CAN_3508Moto6_ID:
-        case CAN_3508Moto7_ID:
-        {
-            static u8 i;
-            i = rx_header.StdId - CAN_3508Moto1_ID;
-            
-            Chassis_Motor[i].msg_cnt++ <= 50 ? GetMotorOffset(&Chassis_Motor[i], rx_data) : GetMotorMeasure(&Chassis_Motor[i], rx_data);  /*读取底盘电机参数信息*/
-            
+    HAL_CAN_GetRxMessage(_hcan, CAN_RX_FIFO0, &rx_header, rx_data); /*recive can data*/
+    can_cnt++;
 
-        }break;
-//	    case CAN_3508Moto5_ID: /*对应的6020电机的ID为1*/
-//        {
-//            
-//            Gimbal_Motor[0].msg_cnt++ <= 50 ? GetMotorOffset(&Gimbal_Motor[0], rx_data) : GetMotorMeasure(&Gimbal_Motor[0], rx_data);  /*读取yaw轴电机参数信息*/
-//            
-//        }break;      
-        
-	}
+    if(_hcan->Instance == CAN1)
+    {
+        switch(rx_header.StdId)
+        {
+            
+            case CAN1_3508Moto1_ID:
+            case CAN1_3508Moto2_ID:
+            case CAN1_3508Moto3_ID:
+            case CAN1_3508Moto4_ID:
+            case CAN1_3508Moto5_ID:
+            case CAN1_3508Moto6_ID:
+            case CAN1_3508Moto7_ID:
+            {
+                static u8 i;
+                i = rx_header.StdId - CAN1_3508Moto1_ID;
+                
+                Chassis_Motor[i].msg_cnt++ <= 50 ? GetMotorOffset(&Chassis_Motor[i], rx_data) : GetMotorMeasure(&Chassis_Motor[i], rx_data);  /*读取底盘电机参数信息*/
+                
+
+            }break;     
+            
+        }
+    }
+    else if(_hcan->Instance == CAN2)
+    {
+        switch(rx_header.StdId)
+        {
+            case CAN2_YawMotor1_ID: /*yaw轴电机ID为1*/
+            {
+                Gimbal[YAW].Motor_Data.msg_cnt++ <= 50 ? GetMotorOffset(&Gimbal[YAW].Motor_Data, rx_data) : GetMotorMeasure(&Gimbal[YAW].Motor_Data, rx_data);
+            }break;
+            case CAN2_PitchMotor2_ID: /*pitch轴电机ID为2*/
+            {
+                Gimbal[PITCH].Motor_Data.msg_cnt++ <= 50 ? GetMotorOffset(&Gimbal[PITCH].Motor_Data, rx_data) : GetMotorMeasure(&Gimbal[PITCH].Motor_Data, rx_data);
+            }break;
+            case CAN2_2006Motor1_ID: /*拨弹轮电机ID为1*/
+            {
+                Shoot.Trigger_Motor_Data.msg_cnt++ <= 50 ? GetMotorOffset(&Shoot.Trigger_Motor_Data, rx_data) : GetMotorMeasure(&Shoot.Trigger_Motor_Data, rx_data);
+            }break;
+            case CAN2_3508Motor2_ID: /*左摩擦轮电机ID为2*/
+            {
+                Shoot.Friction_Motor_Data[0].msg_cnt++ <= 50 ? GetMotorOffset(&Shoot.Friction_Motor_Data[0], rx_data) : GetMotorMeasure(&Shoot.Friction_Motor_Data[0], rx_data);
+            }break;
+            case CAN2_3508Motor3_ID: /*右摩擦轮电机ID为3*/
+            {
+                Shoot.Friction_Motor_Data[1].msg_cnt++ <= 50 ? GetMotorOffset(&Shoot.Friction_Motor_Data[1], rx_data) : GetMotorMeasure(&Shoot.Friction_Motor_Data[1], rx_data);
+            }break;
+        }
+    }
+    
+    
 	if(can_cnt == 500)  /*用于指示CAN通信是否正常*/
 	{
 		can_cnt = 0;
 		HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);  
-		
 	}
 
 }
@@ -195,3 +223,45 @@ void SetMotorValue(CAN_HandleTypeDef *hcan,s16 iq1, s16 iq2, s16 iq3, s16 iq4)
     HAL_CAN_AddTxMessage(hcan, &tx_header, tx_data,(uint32_t*)CAN_TX_MAILBOX0);
 
 }	
+
+
+/*云台电机电压设定值*/
+void SetGimbalMotorVoltage(CAN_HandleTypeDef *hcan, int16_t yaw, int16_t pitch)
+{
+    CAN_TxHeaderTypeDef   tx_header;
+    uint8_t               tx_data[8];
+
+	tx_header.StdId = 0x1FF;
+	tx_header.IDE = CAN_ID_STD;
+	tx_header.RTR = CAN_RTR_DATA;
+	tx_header.DLC = 0x08;
+    tx_data[0] = (yaw >> 8);
+	tx_data[1] = yaw;
+	tx_data[2] = (pitch >> 8);
+	tx_data[3] = pitch;
+    
+    HAL_CAN_AddTxMessage(hcan, &tx_header, tx_data,(uint32_t*)CAN_TX_MAILBOX0);
+}
+
+
+/*发射机构电机的电流设定值，包括摩擦轮和拨弹轮*/
+void SetShootMotorCurrent(CAN_HandleTypeDef *hcan, int16_t current1, int16_t current2, int16_t current3)
+{
+    CAN_TxHeaderTypeDef   tx_header;
+    uint8_t               tx_data[8];
+
+	tx_header.StdId = 0x200;
+	tx_header.IDE = CAN_ID_STD;
+	tx_header.RTR = CAN_RTR_DATA;
+	tx_header.DLC = 0x08;
+	tx_data[0] = (current1 >> 8);
+	tx_data[1] = current1;
+	tx_data[2] = (current2 >> 8);
+	tx_data[3] = current2;
+	tx_data[4] = (current3 >> 8);
+	tx_data[5] = current3;
+	
+    HAL_CAN_AddTxMessage(hcan, &tx_header, tx_data,(uint32_t*)CAN_TX_MAILBOX0);
+}
+
+

@@ -10,7 +10,7 @@
       <TargetName>ChassisTest</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -337,7 +337,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,ARM_MATH_CM4,__CC_ARM,ARM_MATH_MATRIX_CHECK,ARM_MATH_ROUNDING</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\IMCALib\Tool;..\IMCALib\Task;..\IMCALib\Module;..\IMCALib\Module\APPInteraction;..\IMCALib\Module\DSP;..\IMCALib\Module\DSP\Include;..\IMCALib\Module\IMU_IIC</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\IMCALib\Tool;..\IMCALib\Task;..\IMCALib\Module;..\IMCALib\Module\APPInteraction;..\IMCALib\Module\DSP;..\IMCALib\Module\DSP\Include;..\IMCALib\Module\IMU_IIC;..\IMCALib\Tool\judge-driver;..\IMCALib\Tool\PC_connection</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -566,6 +566,16 @@
               <FileType>1</FileType>
               <FilePath>..\IMCALib\Task\CatchingTask.c</FilePath>
             </File>
+            <File>
+              <FileName>GimbalControl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\IMCALib\Task\GimbalControl.c</FilePath>
+            </File>
+            <File>
+              <FileName>ShootControl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\IMCALib\Task\ShootControl.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -605,6 +615,21 @@
               <FileName>Paraminit.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\IMCALib\Tool\Paraminit.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_Judge.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\IMCALib\Tool\judge-driver\Driver_Judge.c</FilePath>
+            </File>
+            <File>
+              <FileName>Judge_interact.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\IMCALib\Tool\PC_connection\Judge_interact.c</FilePath>
+            </File>
+            <File>
+              <FileName>Vision_interact.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\IMCALib\Tool\PC_connection\Vision_interact.c</FilePath>
             </File>
           </Files>
         </Group>
